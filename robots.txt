@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /*/admin
+Sitemap: http://domscan.ru/sitemap.xml
+Host: domscan.ru

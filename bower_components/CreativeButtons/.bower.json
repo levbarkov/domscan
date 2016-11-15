@@ -1,0 +1,14 @@
+{
+  "name": "CreativeButtons",
+  "homepage": "https://github.com/codrops/CreativeButtons",
+  "_release": "ce39ae4082",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ce39ae40827229a0a94767f169037984f3cd5a7c"
+  },
+  "_source": "git://github.com/codrops/CreativeButtons.git",
+  "_target": "*",
+  "_originalSource": "CreativeButtons",
+  "_direct": true
+}
