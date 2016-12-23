@@ -2,11 +2,11 @@
 	$this->setPageTitle($model->title);
 	
 	switch($model->type) {
-		case 'flat': $type_string = 'квартир'; break;
-		case 'land': $type_string =  'земельных участков'; break;
-		case 'commercial': $type_string =  'коммерческой недвижимости'; break;
-		case 'new': $type_string =  'новостроек'; break;
-		case 'house': $type_string =  'домов'; break;
+		case 'flat': $type_string = 'квартир'; $type_string2 = 'квартиры'; break;
+		case 'land': $type_string =  'земельных участков'; $type_string2 = 'земельные участки'; break;
+		case 'commercial': $type_string =  'коммерческой недвижимости'; $type_string2 = 'объекты коммерческой недвижимости'; break;
+		case 'new': $type_string =  'новостроек'; $type_string2 = 'квартиры'; break;
+		case 'house': $type_string =  'домов'; $type_string2 = 'дома'; break;
 	}
 	
 	switch($model->subtype) {
@@ -265,7 +265,42 @@
 
 			            </div>
 						<? endif ?>
-						<!--<span class="property__help-title">Посмотреть похожие квартиры на карте:</span>-->
+                        <div class="property__available">
+						    <span class="property__available-title">Посмотреть похожие <?= $type_string2 ?> на карте:</span>
+                            <ul class="property__help-list">
+                                <?php
+                                    $citytitle = '';
+                                    $city = City::model()->findByPk($model->city);
+                                    $count = false;
+                                    if($city) {
+                                        $citytitle = $city->name;
+                                        $count_criteria = new CDbCriteria();
+                                        $count_criteria->condition = "type='".$model->type."' AND city=".$model->city;
+                                        $count_criteria->distinct = true;
+                                        $count_criteria->select = 'parent_condo_id';
+                                        $count = Estate::model()->count($count_criteria);
+                                    }
+                                ?>
+                                <?php if($count){?>
+                                    <li class="property__help-list-item"><a class="property__help-list-item-link" href="/catalog/<?= $model->type ?>/#?view=map&type=<?= $model->type ?>&subtype=<?= $model->subtype ?>&district=city-<?= $model->city ?>">Другие <?= $type_string2 ?> в <?= $citytitle ?>е (<?=$count?>)</a></li>
+                                <?php }?>
+                                <?php
+                                    $district_title = '';
+                                    $district = District::model()->findByPk($model->district);
+                                    if($district) {
+                                        $district_title = $district->name;
+                                        $count_criteria = new CDbCriteria();
+                                        $count_criteria->condition = "type='" . $model->type . "' AND district=" . $model->district;
+                                        $count_criteria->distinct = true;
+                                        $count_criteria->select = 'parent_condo_id';
+                                        $count = Estate::model()->count($count_criteria);
+                                    }
+                                ?>
+                                <?php if($count){?>
+                                    <li class="property__help-list-item"><a class="property__help-list-item-link" href="/catalog/<?= $model->type ?>/#?view=map&type=<?= $model->type ?>&subtype=<?= $model->subtype ?>&district=<?= $model->district ?>">Другие <?= $type_string2 ?> в <?= $district_title ?> (<?=$count?>)</a></li>
+                                <?php }?>
+                            </ul>
+                        </div>
 						<?
 							$menu = Menu::model()->cache(60)->findByAttributes(array('name'=>'estate_menu'));
 						 ?>
@@ -280,10 +315,10 @@
 										?>
 										<li class="property__help-list-item">
 		                                    <a class="property__help-list-item-link" href="/<?= $item ?>"><?= $page_name->title ?></a>
-		                                </li>									
-										<?									
-									}			
-								}																		
+		                                </li>
+										<?
+									}
+								}
 							} ?>
                             </ul>
                         </div>
